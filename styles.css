@@ -4,7 +4,7 @@
    =================================== */
 
 :root {
-    /* 暖色系カラーパレット */
+    /* 暖色系カラーパレット（ライトモード） */
     --color-bg: #fdf8f3;
     --color-bg-warm: #f9f1e8;
     --color-surface: #ffffff;
@@ -35,6 +35,26 @@
     --radius-md: 16px;
     --radius-lg: 24px;
     --radius-full: 50px;
+}
+
+/* ===================================
+   ダークモード（ナイトモード）
+   =================================== */
+
+[data-theme="dark"] {
+    --color-bg: #1a1612;
+    --color-bg-warm: #231e19;
+    --color-surface: #2d2520;
+    --color-surface-warm: #352d26;
+    --color-accent: #d4a574;
+    --color-accent-dark: #e8c4a0;
+    --color-accent-light: #5c4a3a;
+    --color-secondary: #b8a090;
+    --color-text: #f0e8e0;
+    --color-text-light: #c8beb4;
+    --color-text-muted: #8a7e74;
+    --color-border: #4a3f35;
+    --color-shadow: rgba(0, 0, 0, 0.3);
 }
 
 /* リセット */
@@ -222,6 +242,56 @@ nav a:hover::after {
     width: 100%;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* テーマ切り替えボタン */
+.theme-toggle {
+    position: relative;
+    width: 50px;
+    height: 28px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.theme-toggle:hover {
+    border-color: var(--color-accent);
+}
+
+.theme-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.theme-icon.sun {
+    left: 5px;
+    opacity: 1;
+}
+
+.theme-icon.moon {
+    right: 5px;
+    opacity: 0.3;
+}
+
+/* ダークモード時のテーマボタン */
+[data-theme="dark"] .theme-icon.sun {
+    opacity: 0.3;
+}
+
+[data-theme="dark"] .theme-icon.moon {
+    opacity: 1;
+}
+
 /* ===================================
    ヒーローセクション
    =================================== */
@@ -390,6 +460,77 @@ nav a:hover::after {
     border-radius: var(--radius-full);
     font-size: 0.85rem;
     font-weight: 500;
+}
+
+/* ===================================
+   季節・天気セレクター
+   =================================== */
+
+.selector-section {
+    margin: var(--spacing-xl) 0;
+    animation: fadeSlideUp 0.6s ease-out;
+}
+
+.selector-container {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: 0 10px 40px var(--color-shadow);
+    border: 1px solid var(--color-border);
+}
+
+.selector-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.selector-group:last-child {
+    margin-bottom: 0;
+}
+
+.selector-label {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+}
+
+.selector-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.selector-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--spacing-sm) var(--spacing-xs);
+    background: var(--color-bg-warm);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.selector-btn:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-warm);
+}
+
+.selector-btn.active {
+    border-color: var(--color-accent);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-surface-warm));
+    box-shadow: 0 4px 15px rgba(196, 149, 106, 0.2);
+}
+
+.selector-icon {
+    font-size: 1.5rem;
+    line-height: 1;
 }
 
 /* ===================================
@@ -662,6 +803,11 @@ footer {
         margin-bottom: var(--spacing-lg);
     }
 
+    .header-right {
+        flex-direction: row;
+        gap: var(--spacing-sm);
+    }
+
     nav {
         gap: var(--spacing-sm);
     }
@@ -685,6 +831,10 @@ footer {
 
     .weather-details {
         text-align: center;
+    }
+
+    .selector-buttons {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .fashion-image-container {

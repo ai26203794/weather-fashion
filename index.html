@@ -26,11 +26,17 @@
                 <span class="logo-icon">👗</span>
                 <span class="logo-text">Weather Fashion</span>
             </div>
-            <nav>
-                <a href="#home">ホーム</a>
-                <a href="#about">使い方</a>
-            <a href="#credits">クレジット</a>
-            </nav>
+            <div class="header-right">
+                <nav>
+                    <a href="#home">ホーム</a>
+                    <a href="#about">使い方</a>
+                    <a href="#credits">クレジット</a>
+                </nav>
+                <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+                    <span class="theme-icon sun">☀️</span>
+                    <span class="theme-icon moon">🌙</span>
+                </button>
+            </div>
         </header>
 
         <main>
@@ -63,6 +69,59 @@
                             <p class="location" id="locationName">東京都</p>
                             <p class="temperature" id="temperature">20°C</p>
                             <p class="season" id="seasonText">春</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 季節・天気セレクター -->
+            <section class="selector-section" id="selectorSection" style="display: none;">
+                <h2 class="section-title">季節・天気を選択</h2>
+                
+                <div class="selector-container">
+                    <!-- 季節セレクター -->
+                    <div class="selector-group">
+                        <h3 class="selector-label">季節</h3>
+                        <div class="selector-buttons" id="seasonSelector">
+                            <button class="selector-btn" data-value="spring">
+                                <span class="selector-icon">🌸</span>
+                                <span>春</span>
+                            </button>
+                            <button class="selector-btn" data-value="summer">
+                                <span class="selector-icon">🌻</span>
+                                <span>夏</span>
+                            </button>
+                            <button class="selector-btn" data-value="autumn">
+                                <span class="selector-icon">🍂</span>
+                                <span>秋</span>
+                            </button>
+                            <button class="selector-btn" data-value="winter">
+                                <span class="selector-icon">❄️</span>
+                                <span>冬</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 天気セレクター -->
+                    <div class="selector-group">
+                        <h3 class="selector-label">天気</h3>
+                        <div class="selector-buttons" id="weatherSelector">
+                            <button class="selector-btn" data-value="sunny">
+                                <span class="selector-icon">☀️</span>
+                                <span>晴れ</span>
+                            </button>
+                            <button class="selector-btn" data-value="cloudy">
+                                <span class="selector-icon">☁️</span>
+                                <span>曇り</span>
+                            </button>
+                            <button class="selector-btn" data-value="rainy">
+                                <span class="selector-icon">🌧️</span>
+                                <span>雨</span>
+                            </button>
+                            <button class="selector-btn" data-value="snowy">
+                                <span class="selector-icon">🌨️</span>
+                                <span>雪</span>
+                            </button>
                         </div>
                     </div>
                 </div>

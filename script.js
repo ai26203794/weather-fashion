@@ -5,7 +5,48 @@
  * - 位置情報から天気を取得
  * - 季節と天気に基づいたファッション画像の表示
  * - 音声再生機能
+ * - ライト/ダークテーマ切り替え
  */
+
+// ===================================
+// テーマ設定（ナイトモード）
+// ===================================
+
+/**
+ * テーマを初期化
+ */
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    } else if (prefersDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+}
+
+/**
+ * テーマを切り替え
+ */
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// ページ読み込み時にテーマを適用
+initTheme();
+
+// テーマ切り替えボタンのイベントリスナー
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+});
 
 // ===================================
 // 設定
@@ -138,6 +179,7 @@ const FASHION_ADVICE = {
 const getWeatherBtn = document.getElementById('getWeatherBtn');
 const weatherDisplay = document.getElementById('weatherDisplay');
 const fashionSuggestion = document.getElementById('fashionSuggestion');
+const selectorSection = document.getElementById('selectorSection');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const errorModal = document.getElementById('errorModal');
 const errorMessage = document.getElementById('errorMessage');
@@ -157,12 +199,84 @@ const fashionAdvice = document.getElementById('fashionAdvice');
 const playVoiceBtn = document.getElementById('playVoiceBtn');
 const fashionAudio = document.getElementById('fashionAudio');
 
+// セレクター要素
+const seasonSelector = document.getElementById('seasonSelector');
+const weatherSelector = document.getElementById('weatherSelector');
+
+// 現在の選択状態
+let currentSeason = null;
+let currentWeather = null;
+
 // ===================================
 // イベントリスナー
 // ===================================
 
 getWeatherBtn.addEventListener('click', handleGetWeather);
 playVoiceBtn.addEventListener('click', handlePlayVoice);
+
+// 季節セレクターのイベントリスナー
+seasonSelector.querySelectorAll('.selector-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // アクティブ状態を更新
+        seasonSelector.querySelectorAll('.selector-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        currentSeason = btn.dataset.value;
+        updateDisplayFromSelector();
+    });
+});
+
+// 天気セレクターのイベントリスナー
+weatherSelector.querySelectorAll('.selector-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // アクティブ状態を更新
+        weatherSelector.querySelectorAll('.selector-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        currentWeather = btn.dataset.value;
+        updateDisplayFromSelector();
+    });
+});
+
+/**
+ * セレクターからの選択を反映
+ */
+function updateDisplayFromSelector() {
+    if (!currentSeason || !currentWeather) return;
+    
+    // 天気表示を更新
+    const categoryData = WEATHER_CATEGORIES[currentWeather];
+    weatherIcon.textContent = categoryData.icon;
+    weatherCondition.textContent = categoryData.name;
+    locationName.textContent = '手動選択';
+    temperature.textContent = '--°C';
+    seasonText.textContent = SEASON_NAMES[currentSeason];
+    
+    // ファッション提案を更新
+    updateFashionSuggestion(currentSeason, currentWeather);
+    
+    // セクションを表示
+    weatherDisplay.style.display = 'block';
+    fashionSuggestion.style.display = 'block';
+}
+
+/**
+ * セレクターのアクティブ状態を設定
+ */
+function setActiveSelector(season, weather) {
+    // 季節ボタンのアクティブ状態を設定
+    seasonSelector.querySelectorAll('.selector-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === season);
+    });
+    
+    // 天気ボタンのアクティブ状態を設定
+    weatherSelector.querySelectorAll('.selector-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === weather);
+    });
+    
+    currentSeason = season;
+    currentWeather = weather;
+}
 
 // ===================================
 // メイン関数
@@ -192,8 +306,12 @@ async function handleGetWeather() {
         updateWeatherDisplay(weatherData, season, weatherCategory);
         updateFashionSuggestion(season, weatherCategory);
         
+        // セレクターのアクティブ状態を設定
+        setActiveSelector(season, weatherCategory);
+        
         // セクションを表示
         weatherDisplay.style.display = 'block';
+        selectorSection.style.display = 'block';
         fashionSuggestion.style.display = 'block';
         
         // スムーズにスクロール
